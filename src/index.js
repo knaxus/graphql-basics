@@ -4,6 +4,7 @@ import { GraphQLServer } from 'graphql-yoga';
 const typeDefs = `
   type Query {
     user: User!
+    post: Post!
   }
 
   type User {
@@ -11,6 +12,13 @@ const typeDefs = `
     name: String!
     email: String!
     age: Int
+  }
+
+  type Post {
+    id: ID
+    title: String!
+    body: String!
+    isPublished: Boolean
   }
 `;
 
@@ -22,6 +30,14 @@ const resolvers = {
         id: 99,
         name: 'Red Skull',
         email: 'rs@skull.com',
+      };
+    },
+    post() {
+      return {
+        id: 2131,
+        title: 'Kick-off GraphQL',
+        body: 'Setup and initial schemas with resolvers using graphql yoga',
+        isPublished: false,
       };
     },
   },
