@@ -39,6 +39,7 @@ const typeDefs = `
   type Mutation {
     createUser(name: String!, email: String!, age: Int): User!
     createPost(title: String!, body: String!, author: ID!, isPublished: Boolean): Post!
+    createComment(body: String!, author: ID!, post: ID!): Comment!
   }
 `;
 
@@ -103,7 +104,7 @@ const resolvers = {
 
     createPost(parent, args, ctx, info) {
       // check author exits
-      const validAuthor = dummyData.users.some((user) => user.id === Number(args.author));
+      const validAuthor = dummyData.users.some((user) => String(user.id) === String(args.author));
       if (!validAuthor) throw new Error('Invalid User');
       const titleInUse = dummyData.posts.some((post) => post.title === args.title);
       if (titleInUse) throw new Error('Duplicate title');
@@ -112,6 +113,24 @@ const resolvers = {
       };
       dummyData.posts.push(post);
       return post;
+    },
+
+    createComment(parent, args, ctx, info) {
+      // validate author
+      const validAuthor = dummyData.users.some((user) => String(user.id) === String(args.author));
+      if (!validAuthor) throw new Error('Invalid user');
+
+      const validPost = dummyData.posts.some((post) => String(post.id) === String(args.post));
+      if (!validPost) throw new Error('Invalid post');
+
+      const comment = {
+        id: uuid4(),
+        body: args.body,
+        post: args.post,
+        author: args.author,
+      };
+      dummyData.comments.push(comment);
+      return comment;
     },
   },
 };
