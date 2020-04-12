@@ -38,6 +38,7 @@ const typeDefs = `
 
   type Mutation {
     createUser(name: String!, email: String!, age: Int): User!
+    createPost(title: String!, body: String!, author: ID!, isPublished: Boolean): Post!
   }
 `;
 
@@ -98,6 +99,19 @@ const resolvers = {
       };
       dummyData.users.push(user);
       return user;
+    },
+
+    createPost(parent, args, ctx, info) {
+      // check author exits
+      const validAuthor = dummyData.users.some((user) => user.id === Number(args.author));
+      if (!validAuthor) throw new Error('Invalid User');
+      const titleInUse = dummyData.posts.some((post) => post.title === args.title);
+      if (titleInUse) throw new Error('Duplicate title');
+      const post = {
+        id: uuid4(), title: args.title, body: args.body, author: 100, isPublished: args.isPublished || false,
+      };
+      dummyData.posts.push(post);
+      return post;
     },
   },
 };
