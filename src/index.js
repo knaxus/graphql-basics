@@ -1,11 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { GraphQLServer } from 'graphql-yoga';
+import dummyData from './data';
 
 // Define a schema
 const typeDefs = `
   type Query {
     greet(name: String): String!
-    user: User!
-    post: Post!
+    users: [User!]
+    posts: [Post!]
   }
 
   type User {
@@ -30,20 +32,11 @@ const resolvers = {
       const { name } = args;
       return `Hello ${name}!`;
     },
-    user() {
-      return {
-        id: 99,
-        name: 'Red Skull',
-        email: 'rs@skull.com',
-      };
+    users(parent, args, ctx, info) {
+      return dummyData.users;
     },
-    post() {
-      return {
-        id: 2131,
-        title: 'Kick-off GraphQL',
-        body: 'Setup and initial schemas with resolvers using graphql yoga',
-        isPublished: false,
-      };
+    posts(parent, args, ctx, info) {
+      return dummyData.posts;
     },
   },
 };
@@ -55,4 +48,5 @@ const server = new GraphQLServer({
 });
 
 // start the server
+// eslint-disable-next-line no-console
 server.start(() => console.log('Server is up and running'));
