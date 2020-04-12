@@ -8,6 +8,7 @@ const typeDefs = `
     greet(name: String): String!
     users: [User!]!
     posts(title: String): [Post!]!
+    comments: [Comment!]!
   }
 
   type User {
@@ -52,6 +53,9 @@ const resolvers = {
 
       return dummyData.posts.filter((post) => post.title.toLowerCase().includes(args.title.toLowerCase()));
     },
+    comments(parent, args, ctx, info) {
+      return dummyData.comments;
+    },
   },
   // Let graphQL know about the relations
   Post: {
@@ -73,6 +77,10 @@ const resolvers = {
   Comment: {
     user(parent, args, ctx, info) {
       return dummyData.users.find((user) => parent.user === user.id);
+    },
+
+    post(parent, args, ctx, info) {
+      return dummyData.posts.find((post) => post.id === parent.post);
     },
   },
 };
