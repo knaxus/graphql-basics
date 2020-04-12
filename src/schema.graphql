@@ -33,11 +33,18 @@ type Mutation {
   createUser(data: CreateUserInput): User!
   createPost(data: CreatePostInput): Post!
   createComment(data: CreateCommentInput): Comment!
+  updateUser(id: ID!, data: UpdateUserInput): User!
 }
 
 input CreateUserInput {
   name: String!
   email: String!
+  age: Int
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
   age: Int
 }
 

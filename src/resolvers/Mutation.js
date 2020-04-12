@@ -41,4 +41,27 @@ export default {
     ctx.db.comments.push(comment);
     return comment;
   },
+
+  updateUser(parent, args, ctx, info) {
+    const { id, data } = args;
+
+    const user = ctx.db.users.find((u) => u.id === id);
+    if (!user) throw new Error('Invalid user');
+
+    if (typeof data.email === 'string') {
+      const emailTaken = ctx.db.users.some((u) => u.email === data.email);
+      if (emailTaken) throw new Error('Email already taken');
+      user.email = data.email;
+    }
+
+    if (typeof data.name === 'string') {
+      user.name = data.name;
+    }
+
+    if (data.age) {
+      user.age = data.age;
+    }
+
+    return user;
+  },
 };
