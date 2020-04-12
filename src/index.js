@@ -21,6 +21,7 @@ const typeDefs = `
     id: ID
     title: String!
     body: String!
+    author: User!
     isPublished: Boolean
   }
 `;
@@ -41,6 +42,11 @@ const resolvers = {
       }
 
       return dummyData.posts.filter((post) => post.title.toLowerCase().includes(args.title.toLowerCase()));
+    },
+  },
+  Post: {
+    author(parent, args, ctx, info) {
+      return dummyData.users.find((user) => user.id === parent.author);
     },
   },
 };

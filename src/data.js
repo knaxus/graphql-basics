@@ -13,16 +13,16 @@ const dummyData = {
   ],
   posts: [
     {
-      id: 89012, title: 'JS 101', body: 'Let\'s get started with JavaScript', isPublished: true,
+      id: 89012, title: 'JS 101', body: 'Let\'s get started with JavaScript', author: 123, isPublished: true,
     },
     {
-      id: 78932, title: 'React & Redux', body: 'Make more and more components', isPublished: true,
+      id: 78932, title: 'React & Redux', body: 'Make more and more components', author: 29, isPublished: true,
     },
     {
-      id: 8901323, title: 'Functional JS 101', body: 'Functional JS is the new cool', isPublished: false,
+      id: 8901323, title: 'Functional JS 101', body: 'Functional JS is the new cool', author: 29, isPublished: false,
     },
     {
-      id: 912132, title: 'GraphQL 101', body: 'Now you can query your backend', isPublished: false,
+      id: 912132, title: 'GraphQL 101', body: 'Now you can query your backend', author: 100, isPublished: false,
     },
   ],
 };
