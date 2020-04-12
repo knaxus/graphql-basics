@@ -31,7 +31,7 @@ const typeDefs = `
   type Comment {
     id: ID!
     body: String!
-    user: User!
+    author: User!
     post: Post!
   }
 `;
@@ -75,7 +75,7 @@ const resolvers = {
   },
 
   Comment: {
-    user(parent, args, ctx, info) {
+    author(parent, args, ctx, info) {
       return dummyData.users.find((user) => parent.user === user.id);
     },
 
