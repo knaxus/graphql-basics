@@ -37,9 +37,28 @@ const typeDefs = `
   }
 
   type Mutation {
-    createUser(name: String!, email: String!, age: Int): User!
-    createPost(title: String!, body: String!, author: ID!, isPublished: Boolean!): Post!
-    createComment(body: String!, author: ID!, post: ID!): Comment!
+    createUser(data: CreateUserInput): User!
+    createPost(data: CreatePostInput): Post!
+    createComment(data: CreateCommentInput): Comment!
+  }
+
+  input CreateUserInput {
+    name: String!
+    email: String!
+    age: Int
+  }
+
+  input CreatePostInput {
+    title: String!
+    body: String!
+    author: ID!
+    isPublished: Boolean!
+  }
+
+  input CreateCommentInput {
+    body: String!
+    author: ID!
+    post: ID!
   }
 `;
 
@@ -93,10 +112,10 @@ const resolvers = {
 
   Mutation: {
     createUser(parent, args, ctx, info) {
-      const emialInUse = dummyData.users.some((user) => user.email === args.email);
+      const emialInUse = dummyData.users.some((user) => user.email === args.data.email);
       if (emialInUse) throw new Error('Email already in use');
       const user = {
-        id: uuid4(), name: args.name, email: args.email, age: args.age || null,
+        id: uuid4(), ...args.data,
       };
       dummyData.users.push(user);
       return user;
@@ -104,16 +123,13 @@ const resolvers = {
 
     createPost(parent, args, ctx, info) {
       // check author exits
-      const validAuthor = dummyData.users.some((user) => String(user.id) === String(args.author));
+      const validAuthor = dummyData.users.some((user) => user.id === args.data.author);
       if (!validAuthor) throw new Error('Invalid User');
-      const titleInUse = dummyData.posts.some((post) => post.title === args.title);
+      const titleInUse = dummyData.posts.some((post) => post.title === args.data.title);
       if (titleInUse) throw new Error('Duplicate title');
       const post = {
         id: uuid4(),
-        title: args.title,
-        body: args.body,
-        author: args.author,
-        isPublished: args.isPublished || false,
+        ...args.data,
       };
       dummyData.posts.push(post);
       return post;
@@ -121,17 +137,15 @@ const resolvers = {
 
     createComment(parent, args, ctx, info) {
       // validate author
-      const validAuthor = dummyData.users.some((user) => String(user.id) === String(args.author));
+      const validAuthor = dummyData.users.some((user) => user.id === args.data.author);
       if (!validAuthor) throw new Error('Invalid user');
 
-      const validPost = dummyData.posts.some((post) => String(post.id) === String(args.post));
+      const validPost = dummyData.posts.some((post) => post.id === args.data.post);
       if (!validPost) throw new Error('Invalid post');
 
       const comment = {
         id: uuid4(),
-        body: args.body,
-        post: args.post,
-        author: args.author,
+        ...args.data,
       };
       dummyData.comments.push(comment);
       return comment;
