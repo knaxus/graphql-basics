@@ -13,7 +13,8 @@
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "graphql-yoga": "^1.16.7"
+    "graphql-yoga": "^1.16.7",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "eslint": "^6.8.0",

@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { GraphQLServer } from 'graphql-yoga';
+import uuid4 from 'uuid/v4';
 import dummyData from './data';
 
 // Define a schema
@@ -33,6 +34,10 @@ const typeDefs = `
     body: String!
     author: User!
     post: Post!
+  }
+
+  type Mutation {
+    createUser(name: String!, email: String!, age: Int): User!
   }
 `;
 
@@ -81,6 +86,18 @@ const resolvers = {
 
     post(parent, args, ctx, info) {
       return dummyData.posts.find((post) => post.id === parent.post);
+    },
+  },
+
+  Mutation: {
+    createUser(parent, args, ctx, info) {
+      const emialInUse = dummyData.users.some((user) => user.email === args.email);
+      if (emialInUse) throw new Error('Email already in use');
+      const user = {
+        id: uuid4(), name: args.name, email: args.email, age: args.age || null,
+      };
+      dummyData.users.push(user);
+      return user;
     },
   },
 };
