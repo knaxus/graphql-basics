@@ -6,8 +6,8 @@ import dummyData from './data';
 const typeDefs = `
   type Query {
     greet(name: String): String!
-    users: [User!]
-    posts(title: String): [Post!]
+    users: [User!]!
+    posts(title: String): [Post!]!
   }
 
   type User {
