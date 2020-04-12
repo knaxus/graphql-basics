@@ -7,7 +7,7 @@ const typeDefs = `
   type Query {
     greet(name: String): String!
     users: [User!]
-    posts: [Post!]
+    posts(title: String): [Post!]
   }
 
   type User {
@@ -36,7 +36,11 @@ const resolvers = {
       return dummyData.users;
     },
     posts(parent, args, ctx, info) {
-      return dummyData.posts;
+      if (!args.title) {
+        return dummyData.posts;
+      }
+
+      return dummyData.posts.filter((post) => post.title.toLowerCase().includes(args.title.toLowerCase()));
     },
   },
 };
