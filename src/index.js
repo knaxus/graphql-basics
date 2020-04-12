@@ -25,7 +25,7 @@ const typeDefs = `
     title: String!
     body: String!
     author: User!
-    comments: [Comment]!
+    comments: [Comment!]!
     isPublished: Boolean
   }
 
@@ -38,7 +38,7 @@ const typeDefs = `
 
   type Mutation {
     createUser(name: String!, email: String!, age: Int): User!
-    createPost(title: String!, body: String!, author: ID!, isPublished: Boolean): Post!
+    createPost(title: String!, body: String!, author: ID!, isPublished: Boolean!): Post!
     createComment(body: String!, author: ID!, post: ID!): Comment!
   }
 `;
@@ -83,7 +83,7 @@ const resolvers = {
 
   Comment: {
     author(parent, args, ctx, info) {
-      return dummyData.users.find((user) => parent.user === user.id);
+      return dummyData.users.find((user) => parent.author === user.id);
     },
 
     post(parent, args, ctx, info) {
@@ -109,7 +109,11 @@ const resolvers = {
       const titleInUse = dummyData.posts.some((post) => post.title === args.title);
       if (titleInUse) throw new Error('Duplicate title');
       const post = {
-        id: uuid4(), title: args.title, body: args.body, author: 100, isPublished: args.isPublished || false,
+        id: uuid4(),
+        title: args.title,
+        body: args.body,
+        author: args.author,
+        isPublished: args.isPublished || false,
       };
       dummyData.posts.push(post);
       return post;
