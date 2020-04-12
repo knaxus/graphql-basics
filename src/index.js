@@ -23,7 +23,15 @@ const typeDefs = `
     title: String!
     body: String!
     author: User!
+    comments: [Comment]!
     isPublished: Boolean
+  }
+
+  type Comment {
+    id: ID!
+    body: String!
+    user: User!
+    post: Post!
   }
 `;
 
@@ -50,11 +58,21 @@ const resolvers = {
     author(parent, args, ctx, info) {
       return dummyData.users.find((user) => user.id === parent.author);
     },
+
+    comments(parent, args, ctx, info) {
+      return dummyData.comments.filter((comment) => comment.post === parent.id);
+    },
   },
 
   User: {
     posts(parent, args, ctx, info) {
       return dummyData.posts.filter((post) => post.author === parent.id);
+    },
+  },
+
+  Comment: {
+    user(parent, args, ctx, info) {
+      return dummyData.users.find((user) => parent.user === user.id);
     },
   },
 };

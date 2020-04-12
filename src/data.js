@@ -25,6 +25,17 @@ const dummyData = {
       id: 912132, title: 'GraphQL 101', body: 'Now you can query your backend', author: 100, isPublished: false,
     },
   ],
+  comments: [
+    {
+      id: 321, body: 'Well done', user: 123, post: 8901323,
+    },
+    {
+      id: 902, body: 'Nice post', user: 100, post: 8901323,
+    },
+    {
+      id: 321, body: 'Lucid writting', user: 123, post: 912132,
+    },
+  ],
 };
 
 export default dummyData;
