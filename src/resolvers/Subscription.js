@@ -14,4 +14,16 @@ export default {
     },
   },
 
+  post: {
+    subscribe(parent, args, ctx, info) {
+      const { db, pubsub } = ctx;
+      const { userId } = args;
+
+      const user = db.users.find((u) => u.id === userId);
+      if (!user) throw new Error('User not found');
+
+      return pubsub.asyncIterator(`posts-${userId}`);
+    },
+  },
+
 };

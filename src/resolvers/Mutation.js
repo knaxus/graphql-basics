@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import uuid4 from 'uuid/v4';
+import { v4 as uuid4 } from 'uuid';
 
 export default {
   createUser(parent, args, ctx, info) {
@@ -13,16 +13,21 @@ export default {
   },
 
   createPost(parent, args, ctx, info) {
+    const { db, pubsub } = ctx;
+    const { data } = args;
     // check author exits
-    const validAuthor = ctx.db.users.some((user) => user.id === args.data.author);
+    const validAuthor = db.users.some((user) => user.id === data.author);
     if (!validAuthor) throw new Error('Invalid User');
-    const titleInUse = ctx.db.posts.some((post) => post.title === args.data.title);
+    const titleInUse = db.posts.some((post) => post.title === data.title);
     if (titleInUse) throw new Error('Duplicate title');
     const post = {
       id: uuid4(),
-      ...args.data,
+      ...data,
     };
-    ctx.db.posts.push(post);
+    db.posts.push(post);
+
+    // publish about the post creation by the author
+    pubsub.publish(`posts-${data.author}`, { post });
     return post;
   },
 

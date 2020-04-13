@@ -38,6 +38,7 @@ type Mutation {
 
 type Subscription {
   comment(postId: ID!): Comment!
+  post(userId: ID!): Post!
 }
 
 input CreateUserInput {
