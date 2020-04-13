@@ -1,15 +1,17 @@
 /* eslint-disable no-unused-vars */
 export default {
-  count: {
+  comment: {
     subscribe(parent, args, ctx, info) {
-      let count = 0;
-      setInterval(() => {
-        count += 1;
-        ctx.pubsub.publish('count', {
-          count,
-        });
-      }, 1000);
-      return ctx.pubsub.asyncIterator('count');
+      const { postId } = args;
+      const { db, pubsub } = ctx;
+
+      // find the post
+      const post = db.posts.find((p) => p.id === postId && p.isPublished);
+      if (!post) throw new Error('Post not found');
+
+      // subscribe to the comments for the particular post id
+      return pubsub.asyncIterator(`comments-${postId}`);
     },
   },
+
 };

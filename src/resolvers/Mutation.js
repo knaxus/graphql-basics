@@ -27,18 +27,23 @@ export default {
   },
 
   createComment(parent, args, ctx, info) {
+    const { db, pubsub } = ctx;
     // validate author
-    const validAuthor = ctx.db.users.some((user) => user.id === args.data.author);
+    const validAuthor = db.users.some((user) => user.id === args.data.author);
     if (!validAuthor) throw new Error('Invalid user');
 
-    const validPost = ctx.db.posts.some((post) => post.id === args.data.post);
+    const validPost = db.posts.some((post) => post.id === args.data.post);
     if (!validPost) throw new Error('Invalid post');
 
     const comment = {
       id: uuid4(),
       ...args.data,
     };
-    ctx.db.comments.push(comment);
+    db.comments.push(comment);
+
+    // publish the comment to the particular channel
+    pubsub.publish(`comments-${args.data.post}`, { comment });
+
     return comment;
   },
 
