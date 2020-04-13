@@ -1,11 +1,14 @@
-import { GraphQLServer } from 'graphql-yoga';
+import { GraphQLServer, PubSub } from 'graphql-yoga';
 import dummyData from './data';
 import Query from './resolvers/Query';
 import Mutation from './resolvers/Mutation';
 import Comment from './resolvers/Comment';
 import User from './resolvers/User';
 import Post from './resolvers/Post';
+import Subscription from './resolvers/Subscription';
 
+// create a pub-sub instance for subscriptions
+const pubsub = new PubSub();
 
 // create the server
 const server = new GraphQLServer({
@@ -22,9 +25,11 @@ const server = new GraphQLServer({
     User,
     Comment,
     Mutation,
+    Subscription,
   },
   context: {
     db: dummyData,
+    pubsub,
   },
 });
 
